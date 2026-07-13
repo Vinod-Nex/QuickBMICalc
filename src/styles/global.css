@@ -1,7 +1,7 @@
 :root {
 	--color-primary: #0D6EFD;
 	--color-primary-hover: #0b5ed7;
-	--color-primary-light: rgba(13, 110, 253, 0.15);
+	--color-primary-light: rgba(13, 110, 253, 0.12);
 	--color-background: #F8F9FA;
 	--color-card: #FFFFFF;
 	--color-text: #212529;
@@ -9,25 +9,51 @@
 	--color-border: #E2E8F0;
 	--color-border-hover: #CBD5E1;
 	--color-error: #DC3545;
-	--color-error-bg: rgba(220, 53, 69, 0.1);
+	--color-error-bg: rgba(220, 53, 69, 0.08);
 
 	/* BMI Accent Colors */
 	--color-underweight: #DC3545;
 	--color-healthy: #198754;
-	--color-warning: #FFC107;
+	--color-warning: #D97706; /* Darker amber for better contrast on light mode */
 	--color-obese: #DC3545;
+
+	/* Semantic BG highlights for active rows */
+	--color-bg-underweight: rgba(220, 53, 69, 0.08);
+	--color-bg-healthy: rgba(25, 135, 84, 0.08);
+	--color-bg-warning: rgba(217, 119, 6, 0.08);
+	--color-bg-obese: rgba(220, 53, 69, 0.08);
 
 	/* Typography & Grid */
 	--font-family: 'Inter', system-ui, -apple-system, sans-serif;
-	--radius-card: 12px;
+	--radius-card: 16px;
 	--radius-btn: 12px;
 	--radius-input: 8px;
 	--spacing-base: 8px;
 
 	/* Shadows & Depth */
-	--shadow-card: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+	--shadow-card: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+	--shadow-card-elevated: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 	--shadow-input: 0 1px 2px rgba(0, 0, 0, 0.05);
-	--transition-base: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	--transition-base: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dark Mode Variables */
+html.dark {
+	--color-background: #0B0F19; /* Deep space dark blue */
+	--color-card: #151D30;       /* Rich card background */
+	--color-text: #F1F5F9;       /* Slate 100 */
+	--color-muted: #94A3B8;      /* Slate 400 */
+	--color-border: #243049;     /* Deep slate border */
+	--color-border-hover: #334466;
+	--color-primary-light: rgba(13, 110, 253, 0.25);
+	--color-error-bg: rgba(220, 53, 69, 0.15);
+
+	/* Dark mode specific BMI accents for accessibility contrast */
+	--color-warning: #F59E0B; /* Vibrant amber */
+	--color-bg-underweight: rgba(220, 53, 69, 0.15);
+	--color-bg-healthy: rgba(25, 135, 84, 0.15);
+	--color-bg-warning: rgba(245, 158, 11, 0.15);
+	--color-bg-obese: rgba(220, 53, 69, 0.15);
 }
 
 /* Reset & Base Styles */
@@ -44,16 +70,34 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	overflow-x: hidden;
+	transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Layout Wrapper */
+/* App Layout: 1 Column Mobile, 2 Column Desktop */
 .calculator-container {
 	min-height: 100vh;
 	width: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: calc(var(--spacing-base) * 3);
+	padding: calc(var(--spacing-base) * 4) calc(var(--spacing-base) * 2);
+}
+
+.app-layout {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: calc(var(--spacing-base) * 3);
+	width: 100%;
+	max-width: 480px;
+	margin: 0 auto;
+}
+
+@media (min-width: 992px) {
+	.app-layout {
+		grid-template-columns: 1.1fr 0.9fr;
+		max-width: 980px;
+		align-items: start;
+	}
 }
 
 /* Card Surface */
@@ -61,34 +105,92 @@ body {
 	background-color: var(--color-card);
 	border-radius: var(--radius-card);
 	box-shadow: var(--shadow-card);
-	width: 100%;
-	max-width: 480px;
-	padding: calc(var(--spacing-base) * 4);
 	border: 1px solid var(--color-border);
+	padding: calc(var(--spacing-base) * 4);
+	transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-title-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: calc(var(--spacing-base) * 2);
 }
 
 /* Typography elements */
 h1 {
-	font-size: 28px;
+	font-size: 26px;
 	font-weight: 700;
-	line-height: 36px;
-	margin-bottom: var(--spacing-base);
+	line-height: 32px;
 	color: var(--color-text);
 	letter-spacing: -0.5px;
 }
 
-.description {
-	font-size: 15px;
-	color: var(--color-muted);
-	line-height: 22px;
-	margin-bottom: calc(var(--spacing-base) * 3);
+h2 {
+	font-size: 18px;
+	font-weight: 600;
+	line-height: 24px;
+	color: var(--color-text);
+	margin-bottom: calc(var(--spacing-base) * 1.5);
 }
 
-/* Form layouts */
+.description {
+	font-size: 14px;
+	color: var(--color-muted);
+	line-height: 20px;
+	margin-bottom: calc(var(--spacing-base) * 2);
+}
+
+/* Theme Toggle Button */
+.theme-toggle-btn {
+	background: transparent;
+	border: 1px solid var(--color-border);
+	color: var(--color-text);
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: var(--transition-base);
+}
+
+.theme-toggle-btn:hover {
+	background-color: var(--color-primary-light);
+	border-color: var(--color-primary);
+}
+
+.theme-toggle-btn svg {
+	width: 20px;
+	height: 20px;
+	fill: currentColor;
+	transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.theme-toggle-btn:active svg {
+	transform: scale(0.8) rotate(45deg);
+}
+
+/* Hide theme icons depending on class */
+html.dark .sun-icon {
+	display: block;
+}
+html.dark .moon-icon {
+	display: none;
+}
+html:not(.dark) .sun-icon {
+	display: none;
+}
+html:not(.dark) .moon-icon {
+	display: block;
+}
+
+/* Form Layout */
 #bmi-form {
 	display: flex;
 	flex-direction: column;
-	gap: calc(var(--spacing-base) * 2.5);
+	gap: calc(var(--spacing-base) * 2);
 }
 
 fieldset {
@@ -113,7 +215,7 @@ fieldset {
 	padding: 4px;
 	border-radius: var(--radius-input);
 	border: 1px solid var(--color-border);
-	margin-bottom: var(--spacing-base);
+	transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .toggle-option {
@@ -132,8 +234,8 @@ fieldset {
 
 .toggle-option span {
 	display: block;
-	padding: 10px;
-	font-size: 14px;
+	padding: 8px;
+	font-size: 13px;
 	font-weight: 600;
 	color: var(--color-muted);
 	border-radius: calc(var(--radius-input) - 2px);
@@ -143,7 +245,11 @@ fieldset {
 .toggle-option input:checked + span {
 	background-color: var(--color-card);
 	color: var(--color-primary);
-	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+html.dark .toggle-option input:checked + span {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-option:hover input:not(:checked) + span {
@@ -167,10 +273,11 @@ input[type="number"] {
 	width: 100%;
 	font-family: var(--font-family);
 	font-size: 16px;
-	padding: 12px 14px;
+	padding: 10px 12px;
 	border-radius: var(--radius-input);
 	border: 1px solid var(--color-border);
 	background-color: var(--color-card);
+	color: var(--color-text);
 	box-shadow: var(--shadow-input);
 	outline: none;
 	transition: var(--transition-base);
@@ -204,14 +311,14 @@ input[type="number"]:focus {
 
 .input-suffix {
 	position: absolute;
-	right: 14px;
+	right: 12px;
 	font-size: 14px;
 	color: var(--color-muted);
 	font-weight: 500;
 	pointer-events: none;
 }
 
-/* Validation styling */
+/* Validation Styling */
 .error-text {
 	font-size: 12px;
 	font-weight: 500;
@@ -242,9 +349,9 @@ input[type="number"]:focus {
 	background-color: var(--color-primary);
 	border: none;
 	border-radius: var(--radius-btn);
-	padding: 14px;
+	padding: 12px;
 	cursor: pointer;
-	box-shadow: 0 4px 6px -1px rgba(13, 110, 253, 0.2);
+	box-shadow: 0 4px 6px -1px rgba(13, 110, 253, 0.15);
 	transition: var(--transition-base);
 	display: block;
 	width: 100%;
@@ -255,7 +362,7 @@ input[type="number"]:focus {
 #calculate-btn:hover {
 	background-color: var(--color-primary-hover);
 	transform: translateY(-1px);
-	box-shadow: 0 6px 12px -1px rgba(13, 110, 253, 0.25);
+	box-shadow: 0 6px 12px -1px rgba(13, 110, 253, 0.2);
 }
 
 #calculate-btn:active {
@@ -264,14 +371,15 @@ input[type="number"]:focus {
 
 /* Results Display Area */
 .result {
-	margin-top: calc(var(--spacing-base) * 4);
-	padding: calc(var(--spacing-base) * 3);
+	margin-top: calc(var(--spacing-base) * 3);
+	padding: calc(var(--spacing-base) * 2.5);
 	background-color: var(--color-background);
 	border-radius: var(--radius-input);
 	border: 1px solid var(--color-border);
 	display: flex;
 	flex-direction: column;
 	gap: calc(var(--spacing-base) * 2);
+	transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 /* Animated Entrance */
@@ -295,11 +403,12 @@ input[type="number"]:focus {
 }
 
 .result-header h2 {
-	font-size: 14px;
+	font-size: 13px;
 	text-transform: uppercase;
 	letter-spacing: 1px;
 	color: var(--color-muted);
 	font-weight: 700;
+	margin-bottom: 0;
 }
 
 .result-display {
@@ -309,20 +418,22 @@ input[type="number"]:focus {
 	gap: calc(var(--spacing-base) * 2);
 	border-bottom: 1px solid var(--color-border);
 	padding-bottom: calc(var(--spacing-base) * 1.5);
+	transition: border-color 0.3s ease;
 }
 
 .bmi-value {
-	font-size: 48px;
+	font-size: 42px;
 	font-weight: 800;
 	color: var(--color-text);
 	line-height: 1;
 	letter-spacing: -1px;
+	transition: color 0.3s ease;
 }
 
 .bmi-category {
-	font-size: 14px;
+	font-size: 13px;
 	font-weight: 700;
-	padding: 6px 12px;
+	padding: 5px 12px;
 	border-radius: 20px;
 	color: #FFFFFF;
 	transition: var(--transition-base);
@@ -339,7 +450,11 @@ input[type="number"]:focus {
 
 .bmi-category.overweight {
 	background-color: var(--color-warning);
-	color: #212529; /* Warning/yellow has dark text for accessibility contrast */
+	color: #212529; /* High-contrast text on yellow */
+}
+
+html.dark .bmi-category.overweight {
+	color: #0F172A;
 }
 
 .bmi-category.obese {
@@ -348,14 +463,14 @@ input[type="number"]:focus {
 
 /* BMI Meter visual pointer bar */
 .bmi-meter-container {
-	margin-top: calc(var(--spacing-base) * 1);
+	margin-top: 4px;
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
 }
 
 .bmi-meter-bg {
-	height: 12px;
+	height: 10px;
 	background: linear-gradient(
 		to right,
 		var(--color-underweight) 0%,
@@ -367,7 +482,7 @@ input[type="number"]:focus {
 		var(--color-obese) 75%,
 		var(--color-obese) 100%
 	);
-	border-radius: 6px;
+	border-radius: 5px;
 	position: relative;
 }
 
@@ -375,14 +490,13 @@ input[type="number"]:focus {
 	width: 14px;
 	height: 14px;
 	background-color: var(--color-card);
-	border: 3px solid var(--color-text);
+	border: 3.5px solid var(--color-text);
 	border-radius: 50%;
 	position: absolute;
-	top: -1px;
+	top: -2px;
 	transform: translateX(-50%);
-	transition: left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+	transition: left 0.6s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s ease, border-color 0.3s ease;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-	left: 50%; /* Default initial middle */
 }
 
 .bmi-meter-labels {
@@ -391,10 +505,145 @@ input[type="number"]:focus {
 	font-size: 11px;
 	color: var(--color-muted);
 	font-weight: 600;
-	padding: 0 4px;
+	padding: 0 2px;
 }
 
-/* Footer disclaimer section */
+/* Info Classification Table Styling */
+.classification-table {
+	width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	margin-top: calc(var(--spacing-base) * 1);
+	border-radius: var(--radius-input);
+	overflow: hidden;
+	border: 1px solid var(--color-border);
+}
+
+.classification-table th, .classification-table td {
+	padding: 10px 12px;
+	font-size: 13.5px;
+	text-align: left;
+}
+
+.classification-table th {
+	background-color: var(--color-background);
+	color: var(--color-muted);
+	font-weight: 600;
+	border-bottom: 1px solid var(--color-border);
+	text-transform: uppercase;
+	font-size: 11px;
+	letter-spacing: 0.5px;
+}
+
+.classification-table td {
+	border-bottom: 1px solid var(--color-border);
+	color: var(--color-text);
+}
+
+.classification-table tr:last-child td {
+	border-bottom: none;
+}
+
+/* Category Table Highlighting */
+.classification-table tr {
+	transition: var(--transition-base);
+}
+
+.classification-table tr.active.underweight {
+	background-color: var(--color-bg-underweight);
+}
+.classification-table tr.active.underweight td:first-child {
+	color: var(--color-underweight);
+	font-weight: 700;
+}
+
+.classification-table tr.active.normal {
+	background-color: var(--color-bg-healthy);
+}
+.classification-table tr.active.normal td:first-child {
+	color: var(--color-healthy);
+	font-weight: 700;
+}
+
+.classification-table tr.active.overweight {
+	background-color: var(--color-bg-warning);
+}
+.classification-table tr.active.overweight td:first-child {
+	color: var(--color-warning);
+	font-weight: 700;
+}
+
+.classification-table tr.active.obese {
+	background-color: var(--color-bg-obese);
+}
+.classification-table tr.active.obese td:first-child {
+	color: var(--color-obese);
+	font-weight: 700;
+}
+
+/* Educational Info Cards (Right Column) */
+.info-section {
+	display: flex;
+	flex-direction: column;
+	gap: calc(var(--spacing-base) * 3);
+}
+
+.info-card {
+	background-color: var(--color-card);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-card);
+	padding: calc(var(--spacing-base) * 3);
+	box-shadow: var(--shadow-card);
+	transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.info-card h3 {
+	font-size: 16px;
+	font-weight: 600;
+	margin-bottom: calc(var(--spacing-base) * 1.5);
+	color: var(--color-text);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-base);
+}
+
+.info-card h3 svg {
+	width: 18px;
+	height: 18px;
+	fill: currentColor;
+}
+
+.tips-list {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.tips-list li {
+	font-size: 14px;
+	line-height: 20px;
+	color: var(--color-text);
+	position: relative;
+	padding-left: 20px;
+}
+
+.tips-list li::before {
+	content: "•";
+	position: absolute;
+	left: 4px;
+	color: var(--color-primary);
+	font-size: 18px;
+	line-height: 18px;
+}
+
+.info-text {
+	font-size: 13.5px;
+	line-height: 20px;
+	color: var(--color-muted);
+}
+
+/* Footer layout */
 .card-footer {
 	margin-top: calc(var(--spacing-base) * 3);
 	border-top: 1px solid var(--color-border);
@@ -402,24 +651,25 @@ input[type="number"]:focus {
 }
 
 .disclaimer {
-	font-size: 12px;
+	font-size: 11.5px;
 	color: var(--color-muted);
 	line-height: 18px;
 	text-align: center;
 }
 
-/* Responsiveness adjustments */
+/* Desktop spacing tweaks */
+@media (min-width: 992px) {
+	.calculator-container {
+		padding: calc(var(--spacing-base) * 8) calc(var(--spacing-base) * 4);
+	}
+}
+
 @media (max-width: 480px) {
 	.calculator-container {
 		padding: var(--spacing-base);
 	}
-	.card {
-		padding: calc(var(--spacing-base) * 2.5);
+	.card, .info-card {
+		padding: calc(var(--spacing-base) * 3);
 		border-radius: var(--radius-card);
-		border: none;
-		box-shadow: none; /* Flatten layout on mobile viewport for clean native feel */
-	}
-	body {
-		background-color: var(--color-card); /* Match background on mobile card flow */
 	}
 }

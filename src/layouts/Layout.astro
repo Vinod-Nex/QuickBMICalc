@@ -15,6 +15,19 @@ const { title = "BMI Calculator – QuickBMICalc.com" } = Astro.props;
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>{title}</title>
 		
+		<!-- Theme Verification (FOUC prevention) -->
+		<script is:inline>
+			(function() {
+				const storedTheme = localStorage.getItem('theme');
+				const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+				if (storedTheme === 'dark' || (!storedTheme && systemTheme === 'dark')) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			})();
+		</script>
+		
 		<!-- SEO Meta Tags -->
 		<meta name="description" content="Free online BMI calculator. Check your body mass index instantly with metric or imperial units. Privacy-focused, no ads, no tracking." />
 		<meta name="keywords" content="BMI calculator, body mass index, BMI check, healthy weight, BMI chart, QuickBMICalc" />

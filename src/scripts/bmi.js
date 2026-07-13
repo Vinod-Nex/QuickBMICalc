@@ -26,11 +26,23 @@ document.addEventListener("DOMContentLoaded", () => {
 	const heightError = document.getElementById("height-error");
 	const imperialHeightError = document.getElementById("imperial-height-error");
 
+	// Table Rows
+	const tableRows = {
+		underweight: document.getElementById("row-underweight"),
+		normal: document.getElementById("row-normal"),
+		overweight: document.getElementById("row-overweight"),
+		obese: document.getElementById("row-obese")
+	};
+
+	// Theme Toggle
+	const themeToggleBtn = document.getElementById("theme-toggle");
+
 	// Active unit state
 	let currentUnit = "metric";
 
 	// Initial configuration
 	updateFormFields();
+	initThemeToggle();
 
 	// Listen for unit system toggling
 	unitRadios.forEach(radio => {
@@ -53,6 +65,16 @@ document.addEventListener("DOMContentLoaded", () => {
 			calculateAndDisplayBMI();
 		}
 	});
+
+	// Theme toggler initializer
+	function initThemeToggle() {
+		if (!themeToggleBtn) return;
+		
+		themeToggleBtn.addEventListener("click", () => {
+			const isDark = document.documentElement.classList.toggle("dark");
+			localStorage.setItem("theme", isDark ? "dark" : "light");
+		});
+	}
 
 	// Update fields required properties and visibility based on unit
 	function updateFormFields() {
@@ -94,6 +116,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		bmiCategorySpan.textContent = "";
 		bmiCategorySpan.className = "bmi-category"; // reset classes
 		bmiMeterBar.style.left = "50%";
+		
+		// Reset table highlighting
+		Object.values(tableRows).forEach(row => {
+			if (row) {
+				row.className = "";
+			}
+		});
 	}
 
 	// Helper to remove validation visual errors
@@ -138,7 +167,23 @@ document.addEventListener("DOMContentLoaded", () => {
 		return isValid;
 	}
 
-	// Core logic
+	// Highlight row inside standard category reference table
+	function highlightTableRow(categoryClass) {
+		// Reset classes on all table rows
+		Object.values(tableRows).forEach(row => {
+			if (row) {
+				row.className = "";
+			}
+		});
+
+		// Highlight target category row
+		const targetRow = tableRows[categoryClass];
+		if (targetRow) {
+			targetRow.className = `active ${categoryClass}`;
+		}
+	}
+
+	// Core calculation logic
 	function calculateAndDisplayBMI() {
 		let bmi = 0;
 		const weightVal = parseFloat(weightInput.value);
@@ -165,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			category = "Underweight";
 			categoryClass = "underweight";
 		} else if (roundedBMI >= 18.5 && roundedBMI <= 24.9) {
-			category = "Healthy";
+			category = "Healthy Weight";
 			categoryClass = "normal";
 		} else if (roundedBMI >= 25 && roundedBMI <= 29.9) {
 			category = "Overweight";
@@ -182,6 +227,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Reset & Apply Category Class
 		bmiCategorySpan.className = `bmi-category ${categoryClass}`;
 
+		// Highlight matching table row
+		highlightTableRow(categoryClass);
+
 		// Meter Pointer: Scale 0-40 BMI to 0-100%, clamp
 		let percentage = (roundedBMI / 40) * 100;
 		percentage = Math.max(0, Math.min(100, percentage));
@@ -189,5 +237,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Reveal Results with CSS animation
 		resultDiv.classList.remove("hidden");
+
+		// Smooth scroll to result details on small mobile layouts
+		if (window.innerWidth < 992) {
+			setTimeout(() => {
+				resultDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
+			}, 100);
+		}
 	}
 });
