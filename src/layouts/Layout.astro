@@ -1,0 +1,82 @@
+---
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+}
+
+const { title = "BMI Calculator – QuickBMICalc.com" } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>{title}</title>
+		
+		<!-- SEO Meta Tags -->
+		<meta name="description" content="Free online BMI calculator. Check your body mass index instantly with metric or imperial units. Privacy-focused, no ads, no tracking." />
+		<meta name="keywords" content="BMI calculator, body mass index, BMI check, healthy weight, BMI chart, QuickBMICalc" />
+		<meta name="author" content="QuickBMICalc" />
+		<link rel="canonical" href="https://quickbmicalc.com/" />
+
+		<!-- Open Graph / Facebook -->
+		<meta property="og:type" content="website" />
+		<meta property="og:url" content="https://quickbmicalc.com/" />
+		<meta property="og:title" content="BMI Calculator – QuickBMICalc.com" />
+		<meta property="og:description" content="Free online BMI calculator. Check your body mass index instantly with metric or imperial units. Privacy-focused, no ads, no tracking." />
+		<meta property="og:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D6EFD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='3' x2='12' y2='20' /%3E%3Cline x1='6' y1='20' x2='18' y2='20' /%3E%3Cline x1='3' y1='7' x2='21' y2='7' /%3E%3Cline x1='3' y1='7' x2='6' y2='15' /%3E%3Cline x1='9' y1='7' x2='6' y2='15' /%3E%3Cpath d='M3.5 15h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z' fill='%230D6EFD' /%3E%3Cline x1='15' y1='7' x2='18' y2='15' /%3E%3Cline x1='21' y1='7' x2='18' y2='15' /%3E%3Cpath d='M15.5 15h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z' fill='%230D6EFD' /%3E%3C/svg%3E" />
+
+		<!-- Twitter -->
+		<meta property="twitter:card" content="summary" />
+		<meta property="twitter:url" content="https://quickbmicalc.com/" />
+		<meta property="twitter:title" content="BMI Calculator – QuickBMICalc.com" />
+		<meta property="twitter:description" content="Free online BMI calculator. Check your body mass index instantly with metric or imperial units. Privacy-focused, no ads, no tracking." />
+		<meta property="twitter:image" content="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D6EFD' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='3' x2='12' y2='20' /%3E%3Cline x1='6' y1='20' x2='18' y2='20' /%3E%3Cline x1='3' y1='7' x2='21' y2='7' /%3E%3Cline x1='3' y1='7' x2='6' y2='15' /%3E%3Cline x1='9' y1='7' x2='6' y2='15' /%3E%3Cpath d='M3.5 15h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z' fill='%230D6EFD' /%3E%3Cline x1='15' y1='7' x2='18' y2='15' /%3E%3Cline x1='21' y1='7' x2='18' y2='15' /%3E%3Cpath d='M15.5 15h5a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-5a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5z' fill='%230D6EFD' /%3E%3C/svg%3E" />
+
+		<!-- PWA Meta Tags -->
+		<meta name="theme-color" content="#0D6EFD" />
+		<link rel="manifest" href="/manifest.json" />
+
+		<!-- Preconnect to Google Fonts for Inter -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+		<!-- Vector Favicon -->
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<!-- Fallback inline emoji icon -->
+		<link rel="alternate icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>" />
+
+		<!-- Structured Data (Schema.org JSON-LD) -->
+		<script type="application/ld+json">
+		{
+			"@context": "https://schema.org",
+			"@type": "WebApplication",
+			"name": "BMI Calculator",
+			"url": "https://quickbmicalc.com",
+			"description": "Free online BMI calculator. Check your body mass index instantly with metric or imperial units.",
+			"applicationCategory": "HealthApplication",
+			"operatingSystem": "All"
+		}
+		</script>
+
+		<!-- Service Worker Registration -->
+		<script is:inline>
+			if ('serviceWorker' in navigator) {
+				window.addEventListener('load', () => {
+					navigator.serviceWorker.register('/sw.js')
+						.then(reg => console.log('Service Worker registered successfully:', reg.scope))
+						.catch(err => console.log('Service Worker registration failed:', err));
+				});
+			}
+		</script>
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
+<style is:global>
+	/* Placeholders or basic global styles to be populated fully in Stage 2 */
+</style>
