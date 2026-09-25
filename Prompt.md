@@ -1,266 +1,171 @@
-Here’s the full, ready‑to‑use prompt. Copy it into Anti‑Gravity and let Gemini generate the entire application, including architecture, design system, and Vercel deployment setup.
+I’ll craft a comprehensive, stage‑wise prompt that you can feed into Anti‑Gravity with Gemini AI. It covers the full architecture, design, code, SEO, PWA, and deployment to Vercel for QuickBMICalc.com.
+You’ll run one stage at a time, check the output, then move to the next.
 
-markdown
-You are an expert full‑stack developer and UI/UX designer. I want you to build a complete, production‑ready web application for **WordCountTool.com** – a fast, client‑side word and character counter tool. Use the skills and guidelines below.
+Full Prompt (Copy & Paste into Anti‑Gravity)
+text
+You are an expert web developer and UI/UX designer. Build a privacy‑first, ad‑free, single‑page BMI calculator for the domain QuickBMICalc.com. The output must be a set of static files (HTML, CSS, JS) deployable to Vercel.
 
----
-
-## 1. Project Overview
-
-- **Domain:** `WordCountTool.com`
-- **Name:** WordCountTool
-- **Tagline:** “Instant Word & Character Counter – Free, No Login”
-- **Goal:** A minimal, blazing‑fast tool where writers, students, and SEOs paste text and get live counts for characters, words, sentences, paragraphs, reading time, and top keywords. The entire logic runs in the browser (no backend). Revenue will eventually come from ads, so include a placeholder ad slot.
+Use the following stages. After each stage, stop and show me the current state so I can test it.
 
 ---
 
-## 2. Core Features (All Client‑Side)
+**STAGE 0 – ARCHITECTURE & DESIGN SYSTEM**  
+Create a file `design.md` containing the complete design tokens and guidelines for the app.  
+- **Color palette:** primary `#0D6EFD`, background `#F8F9FA`, card `#FFFFFF`, text `#212529`, accent `#198754` (healthy), `#FFC107` (warning), `#DC3545` (danger).  
+- **Typography:** system font stack, headings `'Inter', sans-serif`, body `'Inter', sans-serif`.  
+- **Spacing:** 8px base grid.  
+- **Border radius:** 12px for cards and buttons.  
+- **Layout:** centered card with max‑width 480px, full viewport height, vertical centering.  
+- **Input fields:** large, accessible labels, clear placeholder text, focus ring `#0D6EFD`.  
+- **Buttons:** solid primary color, white text, hover darken 10%, active scale 0.98.  
+- **Result area:** animated entrance, color‑coded BMI category badge.  
+- **Responsive:** mobile‑first, no horizontal scroll.
 
-1. **Large text input area** – placeholder text “Paste or type your text here…”
-2. **Live counting (no submit button)** – updates on every keystroke:
-   - Character count (with spaces)
-   - Character count (without spaces)
-   - Word count
-   - Sentence count
-   - Paragraph count
-3. **Reading time** – estimated reading time (based on average 225 words/minute).
-4. **Top keywords** – show the 5 most frequent words (≥4 letters, case‑insensitive, ignore common stop words like “the”, “and”, “is”, etc.)
-5. **Clear button** to reset all fields.
-6. **Copy text button** to copy the entire input to clipboard.
-7. **Ad placeholder** – a `<div>` with id “ad-container” where an ad network script can be injected later. Place it discreetly above the results or in a sidebar (desktop).
-
----
-
-## 3. Skills & Tools to Use
-
-1. **OSTRO Design System** – Use the **Ostro** component library for all UI elements (typography, cards, buttons, textarea, containers, grid). Follow Ostro’s theming and spacing tokens. Assume Ostro provides `TextArea`, `Button`, `Card`, `Container`, `Grid`, `Typography`, `Box`.
-2. **Website Design Guidelines** – The UI must be:
-   - Extremely clean and minimal
-   - Fully responsive (mobile‑first)
-   - High contrast, accessible (WCAG AA)
-   - Modern, friendly, with subtle shadows and rounded corners
-   - No distracting animations, only smooth transitions
-   - Use a neutral color palette with one accent color (e.g., #2563EB blue)
-3. **design.md** – You must create a `design.md` file in the root with the complete design tokens that Ostro will consume. Include:
-   - Color palette (primary, secondary, background, text, border)
-   - Typography (font family: Inter, sizes, weights)
-   - Spacing scale (4px base)
-   - Border radius, shadows
-   - Breakpoints (mobile < 768px, tablet 768‑1024px, desktop >1024px)
-4. **Deploy to Vercel** – The project must be a Next.js application (TypeScript, App Router allowed but Pages Router is fine). Include a `vercel.json` if needed, and clear instructions to deploy. Ensure the final output can be pushed to a GitHub repo and deployed with one click.
-
----
-
-## 4. Architecture & Technical Requirements
-
-- **Framework:** Next.js (React) with TypeScript
-- **No server, no database** – completely static, exportable if desired.
-- **State management:** React `useState` + `useMemo` for computed counts.
-- **Utility module:** `lib/countUtils.ts` containing pure functions:
-  - `countCharacters(text: string, withSpaces: boolean): number`
-  - `countWords(text: string): number`
-  - `countSentences(text: string): number`
-  - `countParagraphs(text: string): number`
-  - `estimateReadingTime(wordCount: number): string` → e.g., “2 min read”
-  - `getTopKeywords(text: string, limit: number): { word: string, count: number }[]`
-- **Debounce:** Very light debounce (e.g., 100ms) on the input to keep updates smooth but not janky.
-- **SEO:** Use `next/head` for `<title>`, `<meta description>`, Open Graph tags, favicon.
-- **Ads:** Add a `<div id="ad-container" style="min-height:90px; background:#f9fafb; border:1px dashed #d1d5db; display:flex; align-items:center; justify-content:center; color:#6b7280;">Ad Space</div>` that can be replaced with ad script. Place it between the header and the tool, or in a sidebar if screen width > 1024px.
-
----
-
-## 5. File & Folder Structure
-/
-├── public/
-│ └── favicon.ico
-├── src/
-│ ├── components/
-│ │ ├── Header.tsx
-│ │ ├── TextInput.tsx
-│ │ ├── StatsCard.tsx
-│ │ ├── TopKeywords.tsx
-│ │ ├── AdPlaceholder.tsx
-│ │ └── Footer.tsx
-│ ├── lib/
-│ │ └── countUtils.ts
-│ ├── pages/ (or app/ if using App Router)
-│ │ ├── _app.tsx
-│ │ └── index.tsx
-│ └── styles/
-│ └── ostro-theme.ts (or global.css that imports Ostro styles)
-├── design.md
-├── next.config.js
-├── package.json
-├── tsconfig.json
-└── README.md
+Also specify the file structure:
+project-root/
+index.html
+styles.css
+script.js
+design.md
 
 text
 
 ---
 
-## 6. design.md Content Template
+**STAGE 1 – HTML STRUCTURE (index.html)**  
+Create `index.html` with the following semantic structure:
+- `<!DOCTYPE html>`, `<html lang="en">`, `<head>` with charset, viewport meta, title "BMI Calculator – QuickBMICalc.com", preconnect to Google Fonts for Inter, link to `styles.css`, and link to favicon (use a simple emoji favicon `data:image/svg+xml,...` with a scale icon). No external tracking.
+- `<body>` containing a `<main>` wrapper with a `<div class="card">`. Inside the card:
+  - `<h1>` "BMI Calculator"
+  - `<p>` short description "Enter your weight and height to calculate your Body Mass Index (BMI)."
+  - `<form id="bmi-form">` with fieldsets:
+    - Unit toggle: two radio buttons or a switch for "Metric (kg/cm)" and "Imperial (lb/in)".
+    - Weight input: `id="weight"`, type number, step any, required, placeholder "Weight".
+    - Height input: `id="height"`, type number, step any, required, placeholder "Height".
+    - For imperial, show height inputs: feet and inches (hide/show based on toggle). Name them `height-ft` and `height-in`.
+    - A submit button "Calculate BMI".
+  - `<div id="result" class="result hidden">` containing:
+    - BMI value `<span id="bmi-value">`
+    - BMI category `<span id="bmi-category">`
+    - A meter/visual indicator (a simple colored bar).
+  - Footer `<p class="disclaimer">` with health disclaimer: "BMI is a screening measure and not a diagnostic tool. Consult a healthcare provider."
+- Add `defer` attribute to `script.js` link at the end of body.
 
-```markdown
-# Design Tokens for WordCountTool
+---
 
-## Colors
-- Primary: #2563EB (blue-600)
-- Primary Hover: #1D4ED8
-- Background: #FFFFFF
-- Surface: #F8FAFC
-- Text Primary: #0F172A
-- Text Secondary: #475569
-- Border: #E2E8F0
+**STAGE 2 – CSS STYLING (styles.css)**  
+Create `styles.css` following the design tokens from `design.md`. Include:
+- CSS custom properties on `:root` for all colors, border-radius, spacing.
+- Global reset (box‑sizing, margin, padding).
+- Body: background `#F8F9FA`, font family Inter, display flex, justify‑content center, align‑items center, min‑height 100vh, padding 1rem.
+- Card: background white, border‑radius 12px, padding 2rem, box‑shadow 0 4px 12px rgba(0,0,0,0.1), max‑width 480px, width 100%.
+- Form elements: labels bold, inputs full‑width, padding 0.75rem, border 1px solid #ced4da, border‑radius 8px, transition border‑color 0.2s. Focus styles.
+- Toggle switch: styled like a pill, with labels “Metric” and “Imperial”. Use CSS only, hidden radio buttons, highlight active.
+- Imperial height sub‑fields: side‑by‑side, label above each.
+- Submit button: width 100%, background `#0D6EFD`, color white, border none, padding 0.75rem, border‑radius 8px, font‑size 1rem, cursor pointer, transition background 0.2s, hover darken to `#0b5ed7`, active scale 0.98.
+- Result section: hidden by default (`.hidden { display: none; }`), show when `show` class added. Background `#f0f6ff`, border‑radius 8px, padding 1rem, margin‑top 1.5rem, text‑align center, animate fadeIn.
+- BMI value: font‑size 2.5rem, font‑weight bold.
+- Category badge: inline‑block, padding 0.25rem 0.75rem, border‑radius 20px, font‑size 0.875rem, color white. `.underweight` bg `#FFC107`, `.normal` bg `#198754`, `.overweight` bg `#FD7E14`, `.obese` bg `#DC3545`.
+- Visual meter: a horizontal bar, width 100%, height 8px, border‑radius 4px, background linear‑gradient with stops representing BMI ranges. Add a pointer dot positioned according to BMI value using JS later.
+- Disclaimer: font‑size 0.75rem, color `#6c757d`, margin‑top 1rem.
+- Responsive: on smaller screens, reduce padding to 1rem, keep full width.
 
-## Typography
-- Font Family: 'Inter', sans-serif
-- Heading: 1.5rem, weight 700
-- Body: 1rem, weight 400, line-height 1.6
-- Small: 0.875rem, weight 500
+Use `@keyframes fadeIn` for the result animation.
 
-## Spacing (4px base)
-- xs: 4px, sm: 8px, md: 16px, lg: 24px, xl: 32px, 2xl: 48px
+---
 
-## Border Radius
-- sm: 6px, md: 8px, lg: 12px
+**STAGE 3 – JAVASCRIPT FUNCTIONALITY (script.js)**  
+Create `script.js` with strict mode. Implement:
+- DOM references to form, unit toggle inputs, weight, height, result div, bmi‑value span, category span, meter pointer.
+- Event listener on form submit (prevent default). Validate inputs (positive numbers, not empty).
+- Determine unit system based on toggle value.
+- BMI calculation:
+  - Metric: BMI = weight(kg) / (height(m)²)   (height input in cm → convert to m).
+  - Imperial: weight(lb), height = (feet * 12 + inches) inches → BMI = (weight / (height_in²)) * 703.
+- Round BMI to one decimal.
+- Determine category:
+  - Underweight: < 18.5
+  - Normal: 18.5 – 24.9
+  - Overweight: 25 – 29.9
+  - Obese: ≥ 30
+- Update result display:
+  - Set `bmi-value` textContent to BMI.
+  - Set `bmi-category` textContent to category name, and assign class `underweight` / `normal` / `overweight` / `obese`.
+  - Position the meter pointer: calculate percentage (e.g., scale BMI 0–40 to 0–100%, clamp). Move a small circle absolutely over the gradient bar.
+  - Remove `hidden` class and add `show` class (or just remove hidden) to result div.
+- Unit toggle: when switched, show/hide imperial sub‑fields (height‑ft, height‑in) and update labels/placeholders for weight/height inputs accordingly. Also clear the result.
+- Add input validation UI: if invalid, show a simple red error message next to the field (via a small span) or use HTML5 validation tooltips.
+- Ensure no page reload, fully client‑side.
 
-## Shadows
-- Card: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)
-- Elevated: 0 4px 6px -1px rgba(0,0,0,0.1)
+---
 
-## Breakpoints
-- Mobile: max-width 767px
-- Tablet: 768px - 1024px
-- Desktop: min-width 1025px
-Use these tokens inside Ostro’s ThemeProvider if available, or as CSS custom properties.
+**STAGE 4 – SEO, META TAGS & PWA (in index.html and manifest)**  
+Update `index.html` `<head>` with:
+- Meta description: "Free online BMI calculator. Check your body mass index instantly with metric or imperial units. Privacy‑focused, no ads, no tracking."
+- Meta keywords: "BMI calculator, body mass index, BMI check, healthy weight, BMI chart, QuickBMICalc"
+- Open Graph tags: `og:title`, `og:description`, `og:type` website, `og:url` https://quickbmicalc.com, `og:image` (create a simple SVG of a scale and embed as data URI or use a placeholder).
+- Twitter card summary.
+- Canonical link: `https://quickbmicalc.com/`
+- Schema.org structured data (JSON‑LD) for WebApplication type: name "BMI Calculator", description, applicationCategory "HealthApplication", operatingSystem "All".
+- Add a `<link rel="manifest" href="/manifest.json">`
+- Add theme‑color meta tag `#0D6EFD`.
 
-7. Component Details (Pseudocode for Ostro)
-Header.tsx
-Uses Ostro Container, Typography (heading), a subtitle. Minimal, no navigation.
-
-TextInput.tsx
-Ostro Card containing an Ostro TextArea component (or a styled <textarea> with Ostro styling).
-
-Bind to text state, call handler on input.
-
-Below the textarea, two small Ostro Button components: “Clear” (outlined) and “Copy” (solid).
-
-StatsCard.tsx
-A grid of 4-5 Ostro Card elements displaying:
-
-Characters (with spaces)
-
-Characters (without spaces)
-
-Words
-
-Sentences
-
-Paragraphs
-
-Each card has a label and a large number.
-
-Below them, an Ostro Typography showing reading time (e.g., “⏱️ 2 min read”).
-
-TopKeywords.tsx
-Ostro Card with a heading “Top Keywords”.
-
-A horizontal tag list using Ostro Badge or Chip components. Each shows “word (count)”.
-
-If no text, display “Add text to see keywords”.
-
-AdPlaceholder.tsx
-Plain div with dashed border and text “Advertisement”. Ostro Box can wrap it with responsive visibility.
-
-Footer.tsx
-Small text: “© 2025 WordCountTool.com – Free online word counter. All processing happens in your browser.”
-
-8. Main Page Logic (index.tsx)
-tsx
-import { useState, useMemo, useCallback } from 'react';
-import { countCharacters, countWords, countSentences, countParagraphs, estimateReadingTime, getTopKeywords } from '../lib/countUtils';
-
-export default function Home() {
-  const [text, setText] = useState('');
-
-  const stats = useMemo(() => ({
-    charWithSpaces: countCharacters(text, true),
-    charWithoutSpaces: countCharacters(text, false),
-    words: countWords(text),
-    sentences: countSentences(text),
-    paragraphs: countParagraphs(text),
-    readingTime: estimateReadingTime(countWords(text)),
-    topKeywords: getTopKeywords(text, 5),
-  }), [text]);
-
-  const handleClear = () => setText('');
-  const handleCopy = () => { navigator.clipboard.writeText(text); };
-
-  return (
-    <OstroThemeProvider>
-      <Head> ... SEO tags ... </Head>
-      <Container>
-        <Header />
-        <AdPlaceholder />
-        <TextInput value={text} onChange={setText} onClear={handleClear} onCopy={handleCopy} />
-        <StatsCard stats={stats} />
-        <TopKeywords keywords={stats.topKeywords} />
-        <Footer />
-      </Container>
-    </OstroThemeProvider>
-  );
+Create `manifest.json` file with:
+```json
+{
+  "name": "Quick BMI Calculator",
+  "short_name": "BMI Calc",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F8F9FA",
+  "theme_color": "#0D6EFD",
+  "description": "Free, private BMI calculator",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
-9. Utility Functions (lib/countUtils.ts)
-Implement precise counting logic:
+(For now, generate simple PNG placeholder icons as inline data URIs in the manifest or instruct to add later. You can use an online generator; but in the code, just include a comment to replace.)
 
-Characters with spaces: text.length
+Add a service worker (optional, just a simple sw.js for offline caching, but not strictly required; mention it as a bonus).
 
-Without spaces: text.replace(/\s/g, '').length
+Make sure all meta tags are present.
 
-Words: split by \s+, filter non‑empty.
+STAGE 5 – DEPLOY TO VERCEL
+Provide instructions to deploy the static site to Vercel:
 
-Sentences: split by [.!?]+ (handle multiple punctuation), filter empty.
+Initialize a git repository in the project folder, commit all files.
 
-Paragraphs: split by \n+, filter lines that are not just whitespace.
+Install Vercel CLI: npm i -g vercel (if needed) or simply use the Vercel dashboard.
 
-Reading time: Math.ceil(words / 225) and format as “X min read” or “less than 1 min read” if <1.
+Run vercel and follow prompts. Set the project name to quickbmicalc. The output directory is ./ (root). No build command.
 
-Top keywords: clean text (lowercase, remove punctuation, split to words, filter length ≥ 4, exclude stop words list [a comprehensive set of English stop words: the, and, that, have, for, not, with, you, this, but, his, from, they, say, her, she, will, one, all, would, there, their, what, out, about, who, get, which, when, make, can, like, time, just, him, know, take, people, into, year, your, good, some, could, them, see, other, than, then, now, look, only, come, its, over, think, also, back, after, use, two, how, our, work, first, well, way, even, new, want, because, any, these, give, day, most, us]), count frequency, sort descending, return top N.
+Add the custom domain QuickBMICalc.com in Vercel project settings and configure DNS accordingly (give a summary).
 
-10. Responsive Behavior
-On mobile, everything is a single column, ad sits above the tool, cards stack vertically.
+Ensure that the live site is served over HTTPS.
 
-On tablet/desktop, stats cards are in a 3-4 column grid.
+After deployment, verify all meta tags, PWA manifest, and structured data using Google’s Rich Results Test.
 
-The ad can be moved to a right sidebar on desktop (optional, just keep it at top if easier).
+IMPORTANT NOTES FOR THE AI:
 
-11. SEO & Performance
-Title: “Free Word Counter & Character Count Tool – WordCountTool.com”
+Keep all code in plain separate files (no bundling).
 
-Meta description: “Instant online word and character counter. No login required. Count words, characters, sentences, paragraphs, and reading time. Free, fast, private.”
+No external analytics, ads, or third‑party scripts.
 
-Add structured data (WebApplication) for rich results.
+Comment the code where necessary for clarity.
 
-Ensure the tool is keyboard accessible.
-
-Use next/image if any image, but likely none.
-
-12. Deployment to Vercel
-The project must be a standard Next.js app.
-
-Run npx create-next-app@latest wordcounttool --typescript (but you will generate code inside).
-
-Create a README.md with setup instructions:
-
-Clone the repo
-npm install
-npm run dev
-Deploy on Vercel: import GitHub repo, Vercel auto-detects Next.js, no environment variables needed.
-The generated code should be ready to push.
-
-13. Final Output
-Please output the entire project as a structured folder with all files, fully coded and ready to run. Do not omit any part. Use the OSTRO design system, the design.md tokens, and the website design guidelines exactly as described. The domain must be WordCountTool.com. Include vercel.json if required for redirects (optional). Generate the complete code now.
+At each stage, provide the complete file contents. After I apply them, I will test the app and then proceed to the next stage.
 
 text
 
-Just paste this entire prompt into Anti‑Gravity and let Gemini build the full application for you. It includes the architecture, design tokens, component skeletons, utility logic, SEO, ad placeholder, and deployment instructions – everything requested.
+---
+
+You can now copy this entire block and paste it into Anti‑Gravity. Run stage by stage, checking the output. After each stage, you’ll have a working piece of the app, and by the end, a fully deployable BMI calculator for QuickBMICalc.com.
