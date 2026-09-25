@@ -114,7 +114,15 @@ body {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	gap: calc(var(--spacing-base) * 1.5);
 	margin-bottom: calc(var(--spacing-base) * 2);
+}
+
+.header-actions {
+	display: flex;
+	align-items: center;
+	gap: calc(var(--spacing-base) * 1);
+	flex-shrink: 0;
 }
 
 /* Typography elements */

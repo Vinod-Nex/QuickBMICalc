@@ -1,6 +1,63 @@
 "use strict";
 
+const I18N = {
+	en: {
+		weightMetricLabel: "Weight (kg)",
+		weightMetricPlaceholder: "Weight (e.g., 70)",
+		heightMetricLabel: "Height (cm)",
+		heightMetricPlaceholder: "Height (e.g., 175)",
+		weightImperialLabel: "Weight (lb)",
+		weightImperialPlaceholder: "Weight (e.g., 150)",
+		feetPlaceholder: "Feet",
+		inchesPlaceholder: "Inches",
+		categories: {
+			underweight: "Underweight",
+			normal: "Healthy Weight",
+			overweight: "Overweight",
+			obese: "Obese"
+		}
+	},
+	pt: {
+		weightMetricLabel: "Peso (kg)",
+		weightMetricPlaceholder: "Peso (ex: 70)",
+		heightMetricLabel: "Altura (cm)",
+		heightMetricPlaceholder: "Altura (ex: 175)",
+		weightImperialLabel: "Peso (lb)",
+		weightImperialPlaceholder: "Peso (ex: 150)",
+		feetPlaceholder: "Pés",
+		inchesPlaceholder: "Polegadas",
+		categories: {
+			underweight: "Abaixo do peso",
+			normal: "Peso Saudável",
+			overweight: "Sobrepeso",
+			obese: "Obesidade"
+		}
+	},
+	de: {
+		weightMetricLabel: "Gewicht (kg)",
+		weightMetricPlaceholder: "Gewicht (z. B. 70)",
+		heightMetricLabel: "Größe (cm)",
+		heightMetricPlaceholder: "Größe (z. B. 175)",
+		weightImperialLabel: "Gewicht (lb)",
+		weightImperialPlaceholder: "Gewicht (z. B. 150)",
+		feetPlaceholder: "Fuß",
+		inchesPlaceholder: "Zoll",
+		categories: {
+			underweight: "Untergewicht",
+			normal: "Normalgewicht",
+			overweight: "Übergewicht",
+			obese: "Adipositas"
+		}
+	}
+};
+
 document.addEventListener("DOMContentLoaded", () => {
+	// Detect Active Language
+	const currentLang = (document.documentElement.lang && I18N[document.documentElement.lang])
+		? document.documentElement.lang
+		: "en";
+	const strings = I18N[currentLang];
+
 	// DOM Elements
 	const bmiForm = document.getElementById("bmi-form");
 	const unitRadios = document.querySelectorAll('input[name="unit-system"]');
@@ -20,11 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	const bmiValueSpan = document.getElementById("bmi-value");
 	const bmiCategorySpan = document.getElementById("bmi-category");
 	const bmiMeterBar = document.getElementById("bmi-meter-bar");
-
-	// Error elements
-	const weightError = document.getElementById("weight-error");
-	const heightError = document.getElementById("height-error");
-	const imperialHeightError = document.getElementById("imperial-height-error");
 
 	// Table Rows
 	const tableRows = {
@@ -55,16 +107,18 @@ document.addEventListener("DOMContentLoaded", () => {
 	});
 
 	// Handle form submission
-	bmiForm.addEventListener("submit", (e) => {
-		e.preventDefault();
-		
-		clearValidationErrors();
-		const isValid = validateInputs();
+	if (bmiForm) {
+		bmiForm.addEventListener("submit", (e) => {
+			e.preventDefault();
+			
+			clearValidationErrors();
+			const isValid = validateInputs();
 
-		if (isValid) {
-			calculateAndDisplayBMI();
-		}
-	});
+			if (isValid) {
+				calculateAndDisplayBMI();
+			}
+		});
+	}
 
 	// Theme toggler initializer
 	function initThemeToggle() {
@@ -76,46 +130,53 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
-	// Update fields required properties and visibility based on unit
+	// Update fields required properties and visibility based on unit and language
 	function updateFormFields() {
+		if (!weightLabel || !weightInput) return;
+
 		if (currentUnit === "metric") {
 			// Show Metric UI
-			heightMetricContainer.classList.remove("hidden");
-			heightImperialContainer.classList.add("hidden");
+			if (heightMetricContainer) heightMetricContainer.classList.remove("hidden");
+			if (heightImperialContainer) heightImperialContainer.classList.add("hidden");
 			
-			weightLabel.textContent = "Weight (kg)";
-			weightInput.placeholder = "Weight (e.g., 70)";
-			heightLabel.textContent = "Height (cm)";
-			heightInput.placeholder = "Height (e.g., 175)";
+			weightLabel.textContent = strings.weightMetricLabel;
+			weightInput.placeholder = strings.weightMetricPlaceholder;
+			if (heightLabel) heightLabel.textContent = strings.heightMetricLabel;
+			if (heightInput) heightInput.placeholder = strings.heightMetricPlaceholder;
 			
 			// Set correct required state
 			weightInput.required = true;
-			heightInput.required = true;
-			heightFtInput.required = false;
-			heightInInput.required = false;
+			if (heightInput) heightInput.required = true;
+			if (heightFtInput) heightFtInput.required = false;
+			if (heightInInput) heightInInput.required = false;
 		} else {
 			// Show Imperial UI
-			heightMetricContainer.classList.add("hidden");
-			heightImperialContainer.classList.remove("hidden");
+			if (heightMetricContainer) heightMetricContainer.classList.add("hidden");
+			if (heightImperialContainer) heightImperialContainer.classList.remove("hidden");
 			
-			weightLabel.textContent = "Weight (lb)";
-			weightInput.placeholder = "Weight (e.g., 150)";
+			weightLabel.textContent = strings.weightImperialLabel;
+			weightInput.placeholder = strings.weightImperialPlaceholder;
+			if (heightFtInput) heightFtInput.placeholder = strings.feetPlaceholder;
+			if (heightInInput) heightInInput.placeholder = strings.inchesPlaceholder;
 			
 			// Set correct required state
 			weightInput.required = true;
-			heightInput.required = false;
-			heightFtInput.required = true;
-			heightInInput.required = true;
+			if (heightInput) heightInput.required = false;
+			if (heightFtInput) heightFtInput.required = true;
+			if (heightInInput) heightInInput.required = true;
 		}
 	}
 
 	// Helper to clear results
 	function clearResult() {
+		if (!resultDiv) return;
 		resultDiv.classList.add("hidden");
-		bmiValueSpan.textContent = "--.-";
-		bmiCategorySpan.textContent = "";
-		bmiCategorySpan.className = "bmi-category"; // reset classes
-		bmiMeterBar.style.left = "50%";
+		if (bmiValueSpan) bmiValueSpan.textContent = "--.-";
+		if (bmiCategorySpan) {
+			bmiCategorySpan.textContent = "";
+			bmiCategorySpan.className = "bmi-category";
+		}
+		if (bmiMeterBar) bmiMeterBar.style.left = "50%";
 		
 		// Reset table highlighting
 		Object.values(tableRows).forEach(row => {
@@ -203,29 +264,29 @@ document.addEventListener("DOMContentLoaded", () => {
 		const roundedBMI = Math.round(bmi * 10) / 10;
 
 		// Determine Category
-		let category = "Normal";
+		let category = strings.categories.normal;
 		let categoryClass = "normal";
 
 		if (roundedBMI < 18.5) {
-			category = "Underweight";
+			category = strings.categories.underweight;
 			categoryClass = "underweight";
 		} else if (roundedBMI >= 18.5 && roundedBMI <= 24.9) {
-			category = "Healthy Weight";
+			category = strings.categories.normal;
 			categoryClass = "normal";
 		} else if (roundedBMI >= 25 && roundedBMI <= 29.9) {
-			category = "Overweight";
+			category = strings.categories.overweight;
 			categoryClass = "overweight";
 		} else {
-			category = "Obese";
+			category = strings.categories.obese;
 			categoryClass = "obese";
 		}
 
 		// Update UI elements
-		bmiValueSpan.textContent = roundedBMI.toFixed(1);
-		bmiCategorySpan.textContent = category;
-		
-		// Reset & Apply Category Class
-		bmiCategorySpan.className = `bmi-category ${categoryClass}`;
+		if (bmiValueSpan) bmiValueSpan.textContent = roundedBMI.toFixed(1);
+		if (bmiCategorySpan) {
+			bmiCategorySpan.textContent = category;
+			bmiCategorySpan.className = `bmi-category ${categoryClass}`;
+		}
 
 		// Highlight matching table row
 		highlightTableRow(categoryClass);
@@ -233,13 +294,13 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Meter Pointer: Scale 0-40 BMI to 0-100%, clamp
 		let percentage = (roundedBMI / 40) * 100;
 		percentage = Math.max(0, Math.min(100, percentage));
-		bmiMeterBar.style.left = `${percentage}%`;
+		if (bmiMeterBar) bmiMeterBar.style.left = `${percentage}%`;
 
 		// Reveal Results with CSS animation
-		resultDiv.classList.remove("hidden");
+		if (resultDiv) resultDiv.classList.remove("hidden");
 
 		// Smooth scroll to result details on small mobile layouts
-		if (window.innerWidth < 992) {
+		if (window.innerWidth < 992 && resultDiv) {
 			setTimeout(() => {
 				resultDiv.scrollIntoView({ behavior: "smooth", block: "nearest" });
 			}, 100);

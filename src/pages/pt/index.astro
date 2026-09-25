@@ -1,0 +1,17 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BMICalculator from '../../components/BMICalculator.astro';
+import { translations } from '../../i18n/translations';
+
+const t = translations.pt;
+---
+
+<Layout 
+	title={t.title} 
+	description={t.description} 
+	keywords={t.keywords} 
+	lang="pt" 
+	canonicalPath="/pt/"
+>
+	<BMICalculator lang="pt" />
+</Layout>
