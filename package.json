@@ -8,7 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy:cf": "astro build && wrangler pages deploy dist --project-name quickbmicalc"
+    "deploy:cf": "astro build && wrangler pages deploy dist --project-name quickbmicalc",
+    "deploy:worker": "astro build && wrangler deploy"
   },
   "dependencies": {
     "astro": "^4.11.3"
