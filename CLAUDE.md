@@ -3,5 +3,3 @@ Always use:
 
 - Design.md for the project design
 
-
-nari
