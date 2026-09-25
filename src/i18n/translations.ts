@@ -41,6 +41,22 @@ export interface Translation {
 	privacyTitle: string;
 	privacyText: string;
 	langSelectLabel: string;
+	signIn: string;
+	signUp: string;
+	signOut: string;
+	email: string;
+	password: string;
+	myAccount: string;
+	myHistory: string;
+	loginToSave: string;
+	authModalTitleSignIn: string;
+	authModalTitleSignUp: string;
+	magicLinkOption: string;
+	sendMagicLink: string;
+	historyModalTitle: string;
+	noHistoryText: string;
+	savedBadge: string;
+	deleteRecord: string;
 }
 
 export const translations: Record<'en' | 'pt' | 'de', Translation> = {
@@ -101,6 +117,22 @@ export const translations: Record<'en' | 'pt' | 'de', Translation> = {
 		privacyTitle: '100% Privacy‑First',
 		privacyText: 'All calculation math happens strictly inside your local browser sandbox. We do not transmit, analyze, or upload your parameters to any cloud servers. Free of ads and tracking.',
 		langSelectLabel: 'Select language',
+		signIn: 'Sign In',
+		signUp: 'Create Account',
+		signOut: 'Sign Out',
+		email: 'Email',
+		password: 'Password',
+		myAccount: 'My Account',
+		myHistory: 'BMI History',
+		loginToSave: 'Sign in to save and track your BMI history.',
+		authModalTitleSignIn: 'Sign In to Your Account',
+		authModalTitleSignUp: 'Create Your Free Account',
+		magicLinkOption: 'Send Magic Link via Email',
+		sendMagicLink: 'Send Magic Link',
+		historyModalTitle: 'My BMI Calculation History',
+		noHistoryText: 'No BMI records saved yet. Calculate your BMI to track your progress!',
+		savedBadge: 'Saved to history',
+		deleteRecord: 'Delete'
 	},
 	pt: {
 		locale: 'pt',
@@ -159,6 +191,22 @@ export const translations: Record<'en' | 'pt' | 'de', Translation> = {
 		privacyTitle: '100% Focado em Privacidade',
 		privacyText: 'Todos os cálculos acontecem exclusivamente no navegador do seu dispositivo. Não transmitimos nem armazenamos seus dados em servidores. Livre de anúncios e rastreamento.',
 		langSelectLabel: 'Selecionar idioma',
+		signIn: 'Entrar',
+		signUp: 'Criar Conta',
+		signOut: 'Sair',
+		email: 'E-mail',
+		password: 'Senha',
+		myAccount: 'Minha Conta',
+		myHistory: 'Histórico de IMC',
+		loginToSave: 'Entre para salvar e acompanhar seu histórico de IMC.',
+		authModalTitleSignIn: 'Acessar sua Conta',
+		authModalTitleSignUp: 'Criar Conta Gratuita',
+		magicLinkOption: 'Enviar Link Mágico por E-mail',
+		sendMagicLink: 'Enviar Link Mágico',
+		historyModalTitle: 'Meu Histórico de Cálculos de IMC',
+		noHistoryText: 'Nenhum registro salvo ainda. Calcule seu IMC para acompanhar seu progresso!',
+		savedBadge: 'Salvo no histórico',
+		deleteRecord: 'Excluir'
 	},
 	de: {
 		locale: 'de',
@@ -217,5 +265,21 @@ export const translations: Record<'en' | 'pt' | 'de', Translation> = {
 		privacyTitle: '100 % Datenschutz',
 		privacyText: 'Alle Berechnungen laufen ausschließlich lokal in Ihrer Browser-Sandbox. Es werden keinerlei Parameter an externe Server übertragen oder gespeichert. Werbefrei und ohne Tracker.',
 		langSelectLabel: 'Sprache auswählen',
+		signIn: 'Anmelden',
+		signUp: 'Konto erstellen',
+		signOut: 'Abmelden',
+		email: 'E-Mail',
+		password: 'Passwort',
+		myAccount: 'Mein Konto',
+		myHistory: 'BMI-Verlauf',
+		loginToSave: 'Melden Sie sich an, um Ihren BMI-Verlauf zu speichern und zu verfolgen.',
+		authModalTitleSignIn: 'Bei Ihrem Konto anmelden',
+		authModalTitleSignUp: 'Kostenloses Konto erstellen',
+		magicLinkOption: 'Magic Link per E-Mail senden',
+		sendMagicLink: 'Magic Link senden',
+		historyModalTitle: 'Mein BMI-Berechnungsverlauf',
+		noHistoryText: 'Noch keine Datensätze gespeichert. Berechnen Sie Ihren BMI, um Ihren Fortschritt zu verfolgen!',
+		savedBadge: 'Im Verlauf gespeichert',
+		deleteRecord: 'Löschen'
 	},
 };

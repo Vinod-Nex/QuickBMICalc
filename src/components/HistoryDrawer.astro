@@ -1,0 +1,290 @@
+---
+import type { Translation } from '../i18n/translations';
+
+interface Props {
+	t: Translation;
+}
+
+const { t } = Astro.props;
+---
+
+<!-- History Drawer Modal -->
+<div id="history-modal" class="history-overlay hidden" aria-hidden="true" role="dialog" aria-labelledby="history-modal-title">
+	<div class="history-backdrop" id="history-modal-backdrop"></div>
+
+	<div class="history-card">
+		<header class="history-header">
+			<div class="history-title-wrap">
+				<div class="history-icon-badge">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="12" cy="12" r="10"></circle>
+						<polyline points="12 6 12 12 16 14"></polyline>
+					</svg>
+				</div>
+				<h2 id="history-modal-title" class="history-title">{t.historyModalTitle}</h2>
+			</div>
+			<button id="history-modal-close" class="history-close-btn" aria-label="Close history">&times;</button>
+		</header>
+
+		<!-- Subtitle & User Info -->
+		<div class="history-meta-bar">
+			<span id="history-user-email" class="history-user-email">Logged in</span>
+			<span id="history-count" class="history-count-badge">0 entries</span>
+		</div>
+
+		<!-- History List Container -->
+		<div id="history-list" class="history-list">
+			<div class="history-empty" id="history-empty">
+				<svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+					<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+					<line x1="16" y1="2" x2="16" y2="6"></line>
+					<line x1="8" y1="2" x2="8" y2="6"></line>
+					<line x1="3" y1="10" x2="21" y2="10"></line>
+				</svg>
+				<p>{t.noHistoryText}</p>
+			</div>
+		</div>
+
+		<footer class="history-footer">
+			<button type="button" id="history-close-btn-bottom" class="history-btn-secondary">
+				Close
+			</button>
+		</footer>
+	</div>
+</div>
+
+<style>
+.history-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+	animation: modalFadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.history-overlay.hidden {
+	display: none;
+}
+
+.history-backdrop {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(15, 23, 42, 0.65);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.history-card {
+	position: relative;
+	width: 100%;
+	max-width: 520px;
+	max-height: 85vh;
+	display: flex;
+	flex-direction: column;
+	background: var(--color-card);
+	border: 1px solid var(--color-border);
+	border-radius: var(--radius-card);
+	box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+	padding: 1.75rem;
+	z-index: 1001;
+	animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.history-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 0.75rem;
+}
+
+.history-title-wrap {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.history-icon-badge {
+	width: 36px;
+	height: 36px;
+	border-radius: 10px;
+	background-color: var(--color-primary-light);
+	color: var(--color-primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.history-title {
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: var(--color-text);
+}
+
+.history-close-btn {
+	background: transparent;
+	border: none;
+	font-size: 1.75rem;
+	line-height: 1;
+	color: var(--color-muted);
+	cursor: pointer;
+	padding: 0.25rem;
+	border-radius: 6px;
+	transition: var(--transition-base);
+}
+
+.history-close-btn:hover {
+	color: var(--color-text);
+	background: var(--color-primary-light);
+}
+
+.history-meta-bar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-bottom: 0.75rem;
+	margin-bottom: 1rem;
+	border-bottom: 1px solid var(--color-border);
+	font-size: 0.85rem;
+}
+
+.history-user-email {
+	color: var(--color-muted);
+	font-weight: 500;
+}
+
+.history-count-badge {
+	background: var(--color-primary-light);
+	color: var(--color-primary);
+	padding: 0.2rem 0.6rem;
+	border-radius: 12px;
+	font-weight: 600;
+	font-size: 0.75rem;
+}
+
+.history-list {
+	overflow-y: auto;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	padding-right: 4px;
+}
+
+.history-empty {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+	padding: 3rem 1rem;
+	color: var(--color-muted);
+	gap: 0.75rem;
+}
+
+.history-empty svg {
+	opacity: 0.4;
+}
+
+/* History Entry Item */
+:global(.history-item) {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	background: var(--color-background);
+	border: 1px solid var(--color-border);
+	border-radius: 10px;
+	padding: 0.85rem 1rem;
+	transition: var(--transition-base);
+}
+
+:global(.history-item:hover) {
+	border-color: var(--color-primary);
+	transform: translateX(2px);
+}
+
+:global(.history-item-left) {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+:global(.history-item-date) {
+	font-size: 0.75rem;
+	color: var(--color-muted);
+}
+
+:global(.history-item-details) {
+	font-size: 0.85rem;
+	color: var(--color-text);
+}
+
+:global(.history-item-right) {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+:global(.history-bmi-badge) {
+	font-size: 1.15rem;
+	font-weight: 700;
+	padding: 0.2rem 0.6rem;
+	border-radius: 8px;
+	color: #ffffff;
+}
+
+:global(.history-bmi-badge.underweight) { background-color: var(--color-underweight); }
+:global(.history-bmi-badge.normal) { background-color: var(--color-healthy); }
+:global(.history-bmi-badge.overweight) { background-color: var(--color-warning); }
+:global(.history-bmi-badge.obese) { background-color: var(--color-obese); }
+
+:global(.history-delete-btn) {
+	background: transparent;
+	border: none;
+	color: var(--color-muted);
+	cursor: pointer;
+	padding: 0.35rem;
+	border-radius: 6px;
+	transition: var(--transition-base);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+:global(.history-delete-btn:hover) {
+	color: var(--color-error);
+	background: var(--color-error-bg);
+}
+
+.history-footer {
+	margin-top: 1rem;
+	padding-top: 0.75rem;
+	border-top: 1px solid var(--color-border);
+	display: flex;
+	justify-content: flex-end;
+}
+
+.history-btn-secondary {
+	background: var(--color-background);
+	color: var(--color-text);
+	border: 1px solid var(--color-border);
+	padding: 0.5rem 1rem;
+	border-radius: var(--radius-input);
+	font-weight: 600;
+	font-size: 0.85rem;
+	cursor: pointer;
+	transition: var(--transition-base);
+}
+
+.history-btn-secondary:hover {
+	border-color: var(--color-muted);
+}
+</style>

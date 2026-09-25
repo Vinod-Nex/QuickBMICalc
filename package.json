@@ -12,6 +12,10 @@
     "deploy:worker": "astro build && wrangler deploy"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
     "astro": "^4.11.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.140.0"
   }
 }

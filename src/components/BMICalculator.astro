@@ -1,5 +1,7 @@
 ---
 import LanguageSelector from './LanguageSelector.astro';
+import AuthModal from './AuthModal.astro';
+import HistoryDrawer from './HistoryDrawer.astro';
 import { translations, type Translation } from '../i18n/translations';
 
 interface Props {
@@ -17,6 +19,34 @@ const t: Translation = translations[lang] || translations.en;
 			<div class="card-title-bar">
 				<h1>{t.h1}</h1>
 				<div class="header-actions">
+					<!-- Auth Button (Logged-out state) -->
+					<button id="auth-open-btn" class="auth-header-btn" type="button" aria-label={t.signIn}>
+						<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+							<circle cx="12" cy="7" r="4"></circle>
+						</svg>
+						<span>{t.signIn}</span>
+					</button>
+
+					<!-- User Profile Menu (Logged-in state) -->
+					<div id="user-menu" class="user-menu hidden">
+						<button type="button" id="user-menu-trigger" class="user-chip-btn" aria-haspopup="true">
+							<span id="user-avatar-char" class="user-avatar-badge">U</span>
+							<span id="user-email-display" class="user-email-text">user@example.com</span>
+							<svg class="chevron-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+						</button>
+						<div id="user-dropdown" class="user-dropdown hidden">
+							<button type="button" id="open-history-btn" class="dropdown-item">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+								<span>{t.myHistory}</span>
+							</button>
+							<button type="button" id="sign-out-btn" class="dropdown-item danger">
+								<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+								<span>{t.signOut}</span>
+							</button>
+						</div>
+					</div>
+
 					<LanguageSelector currentLocale={lang} ariaLabel={t.langSelectLabel} />
 					<button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle theme">
 						<!-- Sun Icon -->
@@ -119,6 +149,7 @@ const t: Translation = translations[lang] || translations.en;
 			<div id="result" class="result hidden" aria-live="polite">
 				<div class="result-header">
 					<h2>{t.yourBmi}</h2>
+					<span id="saved-history-badge" class="saved-history-badge hidden">✓ {t.savedBadge}</span>
 				</div>
 				<div class="result-display">
 					<span id="bmi-value" class="bmi-value">--.-</span>
@@ -134,6 +165,11 @@ const t: Translation = translations[lang] || translations.en;
 						<span>30</span>
 					</div>
 				</div>
+			</div>
+
+			<!-- Login Hint Banner for Logged-Out Visitors -->
+			<div id="login-hint" class="login-hint-banner">
+				<p>💡 {t.loginToSave} <button type="button" id="hint-login-btn" class="link-btn">{t.signIn}</button></p>
 			</div>
 
 			<!-- Footer Disclaimer -->
@@ -201,4 +237,8 @@ const t: Translation = translations[lang] || translations.en;
 	</div>
 </main>
 
+<AuthModal t={t} />
+<HistoryDrawer t={t} />
+
 <script src="../scripts/bmi.js"></script>
+<script src="../scripts/auth.js"></script>

@@ -1,4 +1,5 @@
 "use strict";
+import { saveBmiRecord } from "../lib/supabase.js";
 
 const I18N = {
 	en: {
@@ -298,6 +299,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		// Reveal Results with CSS animation
 		if (resultDiv) resultDiv.classList.remove("hidden");
+
+		// Automatically save calculation to history (Supabase if logged in, local cache)
+		const heightDisplay = currentUnit === "metric" 
+			? parseFloat(heightInput.value)
+			: `${parseFloat(heightFtInput.value) || 0}ft ${parseFloat(heightInInput.value) || 0}in`;
+		
+		saveBmiRecord({
+			bmi: roundedBMI.toFixed(1),
+			category: category,
+			weight: weightVal,
+			height: heightDisplay,
+			unit: currentUnit
+		}).then(() => {
+			const savedBadge = document.getElementById("saved-history-badge");
+			if (savedBadge) {
+				savedBadge.classList.remove("hidden");
+				setTimeout(() => savedBadge.classList.add("hidden"), 3000);
+			}
+		}).catch((err) => {
+			console.warn("Could not save BMI record:", err);
+		});
 
 		// Smooth scroll to result details on small mobile layouts
 		if (window.innerWidth < 992 && resultDiv) {
